@@ -1,0 +1,761 @@
+
+kp.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000348  00000000  00000000  00000094  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  00000348  000003dc  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          0000001c  00800060  00800060  000003dc  2**0
+                  ALLOC
+  3 .stab         000006cc  00000000  00000000  000003dc  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  4 .stabstr      00000097  00000000  00000000  00000aa8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .comment      0000002f  00000000  00000000  00000b3f  2**0
+                  CONTENTS, READONLY
+  6 .debug_aranges 00000078  00000000  00000000  00000b6e  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_info   00000525  00000000  00000000  00000be6  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_abbrev 000002a2  00000000  00000000  0000110b  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_line   0000032b  00000000  00000000  000013ad  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_frame  000000ec  00000000  00000000  000016d8  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_str    00000199  00000000  00000000  000017c4  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_loc    000002ed  00000000  00000000  0000195d  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 13 .debug_ranges 00000048  00000000  00000000  00001c4a  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+   8:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+   c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  10:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  14:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  18:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  1c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  20:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  24:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  28:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  2c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  30:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  34:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  38:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  3c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  40:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  44:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  48:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  4c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  50:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d4 e0       	ldi	r29, 0x04	; 4
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+
+00000060 <__do_clear_bss>:
+  60:	20 e0       	ldi	r18, 0x00	; 0
+  62:	a0 e6       	ldi	r26, 0x60	; 96
+  64:	b0 e0       	ldi	r27, 0x00	; 0
+  66:	01 c0       	rjmp	.+2      	; 0x6a <.do_clear_bss_start>
+
+00000068 <.do_clear_bss_loop>:
+  68:	1d 92       	st	X+, r1
+
+0000006a <.do_clear_bss_start>:
+  6a:	ac 37       	cpi	r26, 0x7C	; 124
+  6c:	b2 07       	cpc	r27, r18
+  6e:	e1 f7       	brne	.-8      	; 0x68 <.do_clear_bss_loop>
+  70:	0e 94 99 01 	call	0x332	; 0x332 <main>
+  74:	0c 94 a2 01 	jmp	0x344	; 0x344 <_exit>
+
+00000078 <__bad_interrupt>:
+  78:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+0000007c <DIO_Set_Direction>:
+
+#include "DIO.h"
+
+/******************************************************************************************************************/
+void DIO_Set_Direction(const DIO_Config *s_Config_Msg )
+{
+  7c:	fc 01       	movw	r30, r24
+	uint8 * DDR_Ptr;
+	/* point to the required DDR Register */
+	switch(s_Config_Msg->port)
+  7e:	80 81       	ld	r24, Z
+  80:	82 34       	cpi	r24, 0x42	; 66
+  82:	49 f0       	breq	.+18     	; 0x96 <DIO_Set_Direction+0x1a>
+  84:	18 f4       	brcc	.+6      	; 0x8c <DIO_Set_Direction+0x10>
+  86:	81 34       	cpi	r24, 0x41	; 65
+  88:	89 f4       	brne	.+34     	; 0xac <DIO_Set_Direction+0x30>
+  8a:	0e c0       	rjmp	.+28     	; 0xa8 <DIO_Set_Direction+0x2c>
+  8c:	83 34       	cpi	r24, 0x43	; 67
+  8e:	31 f0       	breq	.+12     	; 0x9c <DIO_Set_Direction+0x20>
+  90:	84 34       	cpi	r24, 0x44	; 68
+  92:	61 f4       	brne	.+24     	; 0xac <DIO_Set_Direction+0x30>
+  94:	06 c0       	rjmp	.+12     	; 0xa2 <DIO_Set_Direction+0x26>
+	{
+		case 'A': DDR_Ptr = &DDRA;
+				  break;
+		case 'B': DDR_Ptr = &DDRB;
+  96:	a7 e3       	ldi	r26, 0x37	; 55
+  98:	b0 e0       	ldi	r27, 0x00	; 0
+				  break;
+  9a:	08 c0       	rjmp	.+16     	; 0xac <DIO_Set_Direction+0x30>
+		case 'C': DDR_Ptr = &DDRC;
+  9c:	a4 e3       	ldi	r26, 0x34	; 52
+  9e:	b0 e0       	ldi	r27, 0x00	; 0
+				  break;
+  a0:	05 c0       	rjmp	.+10     	; 0xac <DIO_Set_Direction+0x30>
+		case 'D': DDR_Ptr = &DDRD;
+  a2:	a1 e3       	ldi	r26, 0x31	; 49
+  a4:	b0 e0       	ldi	r27, 0x00	; 0
+				  break;		  		  		  
+  a6:	02 c0       	rjmp	.+4      	; 0xac <DIO_Set_Direction+0x30>
+{
+	uint8 * DDR_Ptr;
+	/* point to the required DDR Register */
+	switch(s_Config_Msg->port)
+	{
+		case 'A': DDR_Ptr = &DDRA;
+  a8:	aa e3       	ldi	r26, 0x3A	; 58
+  aa:	b0 e0       	ldi	r27, 0x00	; 0
+		case 'C': DDR_Ptr = &DDRC;
+				  break;
+		case 'D': DDR_Ptr = &DDRD;
+				  break;		  		  		  
+	}
+	if(s_Config_Msg->direction == OUTPUT)
+  ac:	82 81       	ldd	r24, Z+2	; 0x02
+  ae:	81 30       	cpi	r24, 0x01	; 1
+  b0:	61 f4       	brne	.+24     	; 0xca <DIO_Set_Direction+0x4e>
+	{
+		SET_BIT(*DDR_Ptr,s_Config_Msg->pin_num); // set the corresponding bit in the DDR register to configure it as output pin
+  b2:	81 e0       	ldi	r24, 0x01	; 1
+  b4:	90 e0       	ldi	r25, 0x00	; 0
+  b6:	01 80       	ldd	r0, Z+1	; 0x01
+  b8:	02 c0       	rjmp	.+4      	; 0xbe <DIO_Set_Direction+0x42>
+  ba:	88 0f       	add	r24, r24
+  bc:	99 1f       	adc	r25, r25
+  be:	0a 94       	dec	r0
+  c0:	e2 f7       	brpl	.-8      	; 0xba <DIO_Set_Direction+0x3e>
+  c2:	9c 91       	ld	r25, X
+  c4:	89 2b       	or	r24, r25
+  c6:	8c 93       	st	X, r24
+  c8:	08 95       	ret
+	}
+	else if(s_Config_Msg->direction == INPUT)	
+  ca:	81 11       	cpse	r24, r1
+  cc:	0c c0       	rjmp	.+24     	; 0xe6 <DIO_Set_Direction+0x6a>
+	{
+		CLEAR_BIT(*DDR_Ptr,s_Config_Msg->pin_num); // clear the corresponding bit in the DDR register to configure it as input pin
+  ce:	81 e0       	ldi	r24, 0x01	; 1
+  d0:	90 e0       	ldi	r25, 0x00	; 0
+  d2:	01 80       	ldd	r0, Z+1	; 0x01
+  d4:	02 c0       	rjmp	.+4      	; 0xda <DIO_Set_Direction+0x5e>
+  d6:	88 0f       	add	r24, r24
+  d8:	99 1f       	adc	r25, r25
+  da:	0a 94       	dec	r0
+  dc:	e2 f7       	brpl	.-8      	; 0xd6 <DIO_Set_Direction+0x5a>
+  de:	80 95       	com	r24
+  e0:	9c 91       	ld	r25, X
+  e2:	89 23       	and	r24, r25
+  e4:	8c 93       	st	X, r24
+  e6:	08 95       	ret
+
+000000e8 <DIO_Write_Pin>:
+	}				
+}
+/*******************************************************************************************************************/
+void DIO_Write_Pin(const DIO_Config * s_State)
+{
+  e8:	fc 01       	movw	r30, r24
+	uint8 * PORT_Ptr;
+	/* point to the required PORT Register */
+	switch(s_State->port)
+  ea:	80 81       	ld	r24, Z
+  ec:	82 34       	cpi	r24, 0x42	; 66
+  ee:	49 f0       	breq	.+18     	; 0x102 <DIO_Write_Pin+0x1a>
+  f0:	18 f4       	brcc	.+6      	; 0xf8 <DIO_Write_Pin+0x10>
+  f2:	81 34       	cpi	r24, 0x41	; 65
+  f4:	89 f4       	brne	.+34     	; 0x118 <DIO_Write_Pin+0x30>
+  f6:	0e c0       	rjmp	.+28     	; 0x114 <DIO_Write_Pin+0x2c>
+  f8:	83 34       	cpi	r24, 0x43	; 67
+  fa:	31 f0       	breq	.+12     	; 0x108 <DIO_Write_Pin+0x20>
+  fc:	84 34       	cpi	r24, 0x44	; 68
+  fe:	61 f4       	brne	.+24     	; 0x118 <DIO_Write_Pin+0x30>
+ 100:	06 c0       	rjmp	.+12     	; 0x10e <DIO_Write_Pin+0x26>
+	{
+		case 'A': PORT_Ptr = &PORTA;
+				  break;
+		case 'B': PORT_Ptr = &PORTB;
+ 102:	a8 e3       	ldi	r26, 0x38	; 56
+ 104:	b0 e0       	ldi	r27, 0x00	; 0
+				  break;
+ 106:	08 c0       	rjmp	.+16     	; 0x118 <DIO_Write_Pin+0x30>
+		case 'C': PORT_Ptr = &PORTC;
+ 108:	a5 e3       	ldi	r26, 0x35	; 53
+ 10a:	b0 e0       	ldi	r27, 0x00	; 0
+				  break;
+ 10c:	05 c0       	rjmp	.+10     	; 0x118 <DIO_Write_Pin+0x30>
+		case 'D': PORT_Ptr = &PORTD;
+ 10e:	a2 e3       	ldi	r26, 0x32	; 50
+ 110:	b0 e0       	ldi	r27, 0x00	; 0
+				  break;		  		  		  
+ 112:	02 c0       	rjmp	.+4      	; 0x118 <DIO_Write_Pin+0x30>
+{
+	uint8 * PORT_Ptr;
+	/* point to the required PORT Register */
+	switch(s_State->port)
+	{
+		case 'A': PORT_Ptr = &PORTA;
+ 114:	ab e3       	ldi	r26, 0x3B	; 59
+ 116:	b0 e0       	ldi	r27, 0x00	; 0
+		case 'C': PORT_Ptr = &PORTC;
+				  break;
+		case 'D': PORT_Ptr = &PORTD;
+				  break;		  		  		  
+	}
+	if(s_State->val == LOGIC_HIGH)
+ 118:	83 81       	ldd	r24, Z+3	; 0x03
+ 11a:	81 30       	cpi	r24, 0x01	; 1
+ 11c:	61 f4       	brne	.+24     	; 0x136 <DIO_Write_Pin+0x4e>
+	{
+		SET_BIT(*PORT_Ptr,s_State->pin_num); //set the corresponding pin in the PORT register
+ 11e:	81 e0       	ldi	r24, 0x01	; 1
+ 120:	90 e0       	ldi	r25, 0x00	; 0
+ 122:	01 80       	ldd	r0, Z+1	; 0x01
+ 124:	02 c0       	rjmp	.+4      	; 0x12a <DIO_Write_Pin+0x42>
+ 126:	88 0f       	add	r24, r24
+ 128:	99 1f       	adc	r25, r25
+ 12a:	0a 94       	dec	r0
+ 12c:	e2 f7       	brpl	.-8      	; 0x126 <DIO_Write_Pin+0x3e>
+ 12e:	9c 91       	ld	r25, X
+ 130:	89 2b       	or	r24, r25
+ 132:	8c 93       	st	X, r24
+ 134:	08 95       	ret
+	}				
+    else if(s_State->val == LOGIC_LOW)
+ 136:	81 11       	cpse	r24, r1
+ 138:	0c c0       	rjmp	.+24     	; 0x152 <DIO_Write_Pin+0x6a>
+	{
+        CLEAR_BIT(*PORT_Ptr,s_State->pin_num); //clear the corresponding pin in the PORT register
+ 13a:	81 e0       	ldi	r24, 0x01	; 1
+ 13c:	90 e0       	ldi	r25, 0x00	; 0
+ 13e:	01 80       	ldd	r0, Z+1	; 0x01
+ 140:	02 c0       	rjmp	.+4      	; 0x146 <DIO_Write_Pin+0x5e>
+ 142:	88 0f       	add	r24, r24
+ 144:	99 1f       	adc	r25, r25
+ 146:	0a 94       	dec	r0
+ 148:	e2 f7       	brpl	.-8      	; 0x142 <DIO_Write_Pin+0x5a>
+ 14a:	80 95       	com	r24
+ 14c:	9c 91       	ld	r25, X
+ 14e:	89 23       	and	r24, r25
+ 150:	8c 93       	st	X, r24
+ 152:	08 95       	ret
+
+00000154 <DIO_Read_Pin>:
+	}		
+}
+/*******************************************************************************************************************/
+uint8 DIO_Read_Pin(const DIO_Config * s_State)
+{
+ 154:	fc 01       	movw	r30, r24
+	uint8 * PIN_Ptr;
+	uint8 output;
+	/* point to the required PIN Register */
+	switch(s_State->port)
+ 156:	80 81       	ld	r24, Z
+ 158:	82 34       	cpi	r24, 0x42	; 66
+ 15a:	49 f0       	breq	.+18     	; 0x16e <DIO_Read_Pin+0x1a>
+ 15c:	18 f4       	brcc	.+6      	; 0x164 <DIO_Read_Pin+0x10>
+ 15e:	81 34       	cpi	r24, 0x41	; 65
+ 160:	89 f4       	brne	.+34     	; 0x184 <DIO_Read_Pin+0x30>
+ 162:	0e c0       	rjmp	.+28     	; 0x180 <DIO_Read_Pin+0x2c>
+ 164:	83 34       	cpi	r24, 0x43	; 67
+ 166:	31 f0       	breq	.+12     	; 0x174 <DIO_Read_Pin+0x20>
+ 168:	84 34       	cpi	r24, 0x44	; 68
+ 16a:	61 f4       	brne	.+24     	; 0x184 <DIO_Read_Pin+0x30>
+ 16c:	06 c0       	rjmp	.+12     	; 0x17a <DIO_Read_Pin+0x26>
+	{
+		case 'A': PIN_Ptr = &PINA;
+				  break;
+		case 'B': PIN_Ptr = &PINB;
+ 16e:	a6 e3       	ldi	r26, 0x36	; 54
+ 170:	b0 e0       	ldi	r27, 0x00	; 0
+				  break;
+ 172:	08 c0       	rjmp	.+16     	; 0x184 <DIO_Read_Pin+0x30>
+		case 'C': PIN_Ptr = &PINC;
+ 174:	a3 e3       	ldi	r26, 0x33	; 51
+ 176:	b0 e0       	ldi	r27, 0x00	; 0
+				  break;
+ 178:	05 c0       	rjmp	.+10     	; 0x184 <DIO_Read_Pin+0x30>
+		case 'D': PIN_Ptr = &PIND;
+ 17a:	a0 e3       	ldi	r26, 0x30	; 48
+ 17c:	b0 e0       	ldi	r27, 0x00	; 0
+				  break;		  		  		  
+ 17e:	02 c0       	rjmp	.+4      	; 0x184 <DIO_Read_Pin+0x30>
+	uint8 * PIN_Ptr;
+	uint8 output;
+	/* point to the required PIN Register */
+	switch(s_State->port)
+	{
+		case 'A': PIN_Ptr = &PINA;
+ 180:	a9 e3       	ldi	r26, 0x39	; 57
+ 182:	b0 e0       	ldi	r27, 0x00	; 0
+		case 'C': PIN_Ptr = &PINC;
+				  break;
+		case 'D': PIN_Ptr = &PIND;
+				  break;		  		  		  
+	}
+	if(BIT_IS_SET(*PIN_Ptr,s_State->pin_num)) //check if the corresponding bit is set in the PIN register
+ 184:	8c 91       	ld	r24, X
+ 186:	90 e0       	ldi	r25, 0x00	; 0
+ 188:	01 80       	ldd	r0, Z+1	; 0x01
+ 18a:	02 c0       	rjmp	.+4      	; 0x190 <DIO_Read_Pin+0x3c>
+ 18c:	95 95       	asr	r25
+ 18e:	87 95       	ror	r24
+ 190:	0a 94       	dec	r0
+ 192:	e2 f7       	brpl	.-8      	; 0x18c <DIO_Read_Pin+0x38>
+	else if(BIT_IS_CLEAR(*PIN_Ptr,s_State->pin_num)) //check if the corresponding bit is clear in the PIN register
+	{
+		output = LOGIC_LOW;
+	}
+	return output;	
+}
+ 194:	81 70       	andi	r24, 0x01	; 1
+ 196:	08 95       	ret
+
+00000198 <KeyPad_4x3_adjustKeyNumber>:
+}
+#if (N_col == 3)
+
+uint8 KeyPad_4x3_adjustKeyNumber(uint8 button_number)
+{
+	switch(button_number)
+ 198:	8a 30       	cpi	r24, 0x0A	; 10
+ 19a:	31 f0       	breq	.+12     	; 0x1a8 <KeyPad_4x3_adjustKeyNumber+0x10>
+ 19c:	50 f0       	brcs	.+20     	; 0x1b2 <KeyPad_4x3_adjustKeyNumber+0x1a>
+ 19e:	8b 30       	cpi	r24, 0x0B	; 11
+ 1a0:	39 f0       	breq	.+14     	; 0x1b0 <KeyPad_4x3_adjustKeyNumber+0x18>
+ 1a2:	8c 30       	cpi	r24, 0x0C	; 12
+ 1a4:	31 f4       	brne	.+12     	; 0x1b2 <KeyPad_4x3_adjustKeyNumber+0x1a>
+ 1a6:	02 c0       	rjmp	.+4      	; 0x1ac <KeyPad_4x3_adjustKeyNumber+0x14>
+	{
+		case 10: return '*'; // ASCII Code of =
+ 1a8:	8a e2       	ldi	r24, 0x2A	; 42
+ 1aa:	08 95       	ret
+		break;
+		case 11: return 0;
+		break;
+		case 12: return '#'; // ASCII Code of +
+ 1ac:	83 e2       	ldi	r24, 0x23	; 35
+ 1ae:	08 95       	ret
+{
+	switch(button_number)
+	{
+		case 10: return '*'; // ASCII Code of =
+		break;
+		case 11: return 0;
+ 1b0:	80 e0       	ldi	r24, 0x00	; 0
+		break;
+		case 12: return '#'; // ASCII Code of +
+		break;
+		default: return button_number;
+	}
+}
+ 1b2:	08 95       	ret
+
+000001b4 <KeyPad_getPressedKey>:
+* Output : void
+* Notes : #if to decide  to be 8-bit or 4-bit mode
+*******************************************************************************************************/
+
+
+uint8 KeyPad_getPressedKey(void){
+ 1b4:	4f 92       	push	r4
+ 1b6:	5f 92       	push	r5
+ 1b8:	6f 92       	push	r6
+ 1ba:	7f 92       	push	r7
+ 1bc:	8f 92       	push	r8
+ 1be:	9f 92       	push	r9
+ 1c0:	af 92       	push	r10
+ 1c2:	bf 92       	push	r11
+ 1c4:	cf 92       	push	r12
+ 1c6:	df 92       	push	r13
+ 1c8:	ef 92       	push	r14
+ 1ca:	ff 92       	push	r15
+ 1cc:	0f 93       	push	r16
+ 1ce:	1f 93       	push	r17
+ 1d0:	cf 93       	push	r28
+ 1d2:	df 93       	push	r29
+	uint8 col,row,count;
+	while(1)
+	{
+		for(col=0;col<N_col;col++) /* loop for columns */
+ 1d4:	91 2c       	mov	r9, r1
+ 1d6:	0f 2e       	mov	r0, r31
+ 1d8:	f3 e6       	ldi	r31, 0x63	; 99
+ 1da:	6f 2e       	mov	r6, r31
+ 1dc:	f0 e0       	ldi	r31, 0x00	; 0
+ 1de:	7f 2e       	mov	r7, r31
+ 1e0:	f0 2d       	mov	r31, r0
+* Output : void
+* Notes : #if to decide  to be 8-bit or 4-bit mode
+*******************************************************************************************************/
+
+
+uint8 KeyPad_getPressedKey(void){
+ 1e2:	e1 2c       	mov	r14, r1
+ 1e4:	f1 2c       	mov	r15, r1
+	{
+		for(col=0;col<N_col;col++) /* loop for columns */
+		{
+			for(count=0;count<N_col;count++)
+			{
+			g_KP_Col[count].port      = KP_PORT; // which port KP enable pin
+ 1e6:	0f 2e       	mov	r0, r31
+ 1e8:	f1 e4       	ldi	r31, 0x41	; 65
+ 1ea:	af 2e       	mov	r10, r31
+ 1ec:	f0 2d       	mov	r31, r0
+			g_KP_Col[count].pin_num   = 4 + count; //KP enable PIN Number
+			g_KP_Col[count].direction = INPUT;
+			g_KP_Col[count].val     = LOGIC_HIGH;
+ 1ee:	bb 24       	eor	r11, r11
+ 1f0:	b3 94       	inc	r11
+ 1f2:	0f 2e       	mov	r0, r31
+ 1f4:	ff e6       	ldi	r31, 0x6F	; 111
+ 1f6:	4f 2e       	mov	r4, r31
+ 1f8:	f0 e0       	ldi	r31, 0x00	; 0
+ 1fa:	5f 2e       	mov	r5, r31
+ 1fc:	f0 2d       	mov	r31, r0
+
+uint8 KeyPad_getPressedKey(void){
+	uint8 col,row,count;
+	while(1)
+	{
+		for(col=0;col<N_col;col++) /* loop for columns */
+ 1fe:	81 2c       	mov	r8, r1
+ 200:	84 c0       	rjmp	.+264    	; 0x30a <KeyPad_getPressedKey+0x156>
+* Output : void
+* Notes : #if to decide  to be 8-bit or 4-bit mode
+*******************************************************************************************************/
+
+
+uint8 KeyPad_getPressedKey(void){
+ 202:	fe 01       	movw	r30, r28
+ 204:	33 97       	sbiw	r30, 0x03	; 3
+	{
+		for(col=0;col<N_col;col++) /* loop for columns */
+		{
+			for(count=0;count<N_col;count++)
+			{
+			g_KP_Col[count].port      = KP_PORT; // which port KP enable pin
+ 206:	a0 82       	st	Z, r10
+* Output : void
+* Notes : #if to decide  to be 8-bit or 4-bit mode
+*******************************************************************************************************/
+
+
+uint8 KeyPad_getPressedKey(void){
+ 208:	fe 01       	movw	r30, r28
+ 20a:	32 97       	sbiw	r30, 0x02	; 2
+ 20c:	80 2f       	mov	r24, r16
+ 20e:	8c 5f       	subi	r24, 0xFC	; 252
+		for(col=0;col<N_col;col++) /* loop for columns */
+		{
+			for(count=0;count<N_col;count++)
+			{
+			g_KP_Col[count].port      = KP_PORT; // which port KP enable pin
+			g_KP_Col[count].pin_num   = 4 + count; //KP enable PIN Number
+ 210:	80 83       	st	Z, r24
+* Output : void
+* Notes : #if to decide  to be 8-bit or 4-bit mode
+*******************************************************************************************************/
+
+
+uint8 KeyPad_getPressedKey(void){
+ 212:	fe 01       	movw	r30, r28
+ 214:	31 97       	sbiw	r30, 0x01	; 1
+		{
+			for(count=0;count<N_col;count++)
+			{
+			g_KP_Col[count].port      = KP_PORT; // which port KP enable pin
+			g_KP_Col[count].pin_num   = 4 + count; //KP enable PIN Number
+			g_KP_Col[count].direction = INPUT;
+ 216:	10 82       	st	Z, r1
+			g_KP_Col[count].val     = LOGIC_HIGH;
+ 218:	b8 82       	st	Y, r11
+			DIO_Set_Direction(& g_KP_Col[count]);
+ 21a:	c8 01       	movw	r24, r16
+ 21c:	88 0f       	add	r24, r24
+ 21e:	99 1f       	adc	r25, r25
+ 220:	88 0f       	add	r24, r24
+ 222:	99 1f       	adc	r25, r25
+ 224:	0f 2e       	mov	r0, r31
+ 226:	f0 e6       	ldi	r31, 0x60	; 96
+ 228:	cf 2e       	mov	r12, r31
+ 22a:	f0 e0       	ldi	r31, 0x00	; 0
+ 22c:	df 2e       	mov	r13, r31
+ 22e:	f0 2d       	mov	r31, r0
+ 230:	c8 0e       	add	r12, r24
+ 232:	d9 1e       	adc	r13, r25
+ 234:	c6 01       	movw	r24, r12
+ 236:	0e 94 3e 00 	call	0x7c	; 0x7c <DIO_Set_Direction>
+			DIO_Write_Pin(& g_KP_Col[count]);
+ 23a:	c6 01       	movw	r24, r12
+ 23c:	0e 94 74 00 	call	0xe8	; 0xe8 <DIO_Write_Pin>
+ 240:	0f 5f       	subi	r16, 0xFF	; 255
+ 242:	1f 4f       	sbci	r17, 0xFF	; 255
+ 244:	24 96       	adiw	r28, 0x04	; 4
+	uint8 col,row,count;
+	while(1)
+	{
+		for(col=0;col<N_col;col++) /* loop for columns */
+		{
+			for(count=0;count<N_col;count++)
+ 246:	03 30       	cpi	r16, 0x03	; 3
+ 248:	11 05       	cpc	r17, r1
+ 24a:	d9 f6       	brne	.-74     	; 0x202 <KeyPad_getPressedKey+0x4e>
+ 24c:	e2 01       	movw	r28, r4
+ 24e:	87 01       	movw	r16, r14
+* Output : void
+* Notes : #if to decide  to be 8-bit or 4-bit mode
+*******************************************************************************************************/
+
+
+uint8 KeyPad_getPressedKey(void){
+ 250:	fe 01       	movw	r30, r28
+ 252:	33 97       	sbiw	r30, 0x03	; 3
+			
+			}
+			
+			for(count=0;count<N_row;count++)
+			{
+				g_KP_Row[count].port      = KP_PORT; // which port KP enable pin
+ 254:	a0 82       	st	Z, r10
+* Output : void
+* Notes : #if to decide  to be 8-bit or 4-bit mode
+*******************************************************************************************************/
+
+
+uint8 KeyPad_getPressedKey(void){
+ 256:	fe 01       	movw	r30, r28
+ 258:	32 97       	sbiw	r30, 0x02	; 2
+			}
+			
+			for(count=0;count<N_row;count++)
+			{
+				g_KP_Row[count].port      = KP_PORT; // which port KP enable pin
+				g_KP_Row[count].pin_num   = count; //KP enable PIN Number
+ 25a:	00 83       	st	Z, r16
+* Output : void
+* Notes : #if to decide  to be 8-bit or 4-bit mode
+*******************************************************************************************************/
+
+
+uint8 KeyPad_getPressedKey(void){
+ 25c:	fe 01       	movw	r30, r28
+ 25e:	31 97       	sbiw	r30, 0x01	; 1
+			
+			for(count=0;count<N_row;count++)
+			{
+				g_KP_Row[count].port      = KP_PORT; // which port KP enable pin
+				g_KP_Row[count].pin_num   = count; //KP enable PIN Number
+				g_KP_Row[count].direction = INPUT;
+ 260:	10 82       	st	Z, r1
+				g_KP_Row[count].val     = LOGIC_HIGH;
+ 262:	b8 82       	st	Y, r11
+				
+			    DIO_Set_Direction(& g_KP_Row[count]);
+ 264:	c8 01       	movw	r24, r16
+ 266:	88 0f       	add	r24, r24
+ 268:	99 1f       	adc	r25, r25
+ 26a:	88 0f       	add	r24, r24
+ 26c:	99 1f       	adc	r25, r25
+ 26e:	0f 2e       	mov	r0, r31
+ 270:	fc e6       	ldi	r31, 0x6C	; 108
+ 272:	cf 2e       	mov	r12, r31
+ 274:	f0 e0       	ldi	r31, 0x00	; 0
+ 276:	df 2e       	mov	r13, r31
+ 278:	f0 2d       	mov	r31, r0
+ 27a:	c8 0e       	add	r12, r24
+ 27c:	d9 1e       	adc	r13, r25
+ 27e:	c6 01       	movw	r24, r12
+ 280:	0e 94 3e 00 	call	0x7c	; 0x7c <DIO_Set_Direction>
+					DIO_Write_Pin(& g_KP_Row[count]);
+ 284:	c6 01       	movw	r24, r12
+ 286:	0e 94 74 00 	call	0xe8	; 0xe8 <DIO_Write_Pin>
+ 28a:	0f 5f       	subi	r16, 0xFF	; 255
+ 28c:	1f 4f       	sbci	r17, 0xFF	; 255
+ 28e:	24 96       	adiw	r28, 0x04	; 4
+			DIO_Write_Pin(& g_KP_Col[count]);
+			
+			
+			}
+			
+			for(count=0;count<N_row;count++)
+ 290:	04 30       	cpi	r16, 0x04	; 4
+ 292:	11 05       	cpc	r17, r1
+ 294:	e9 f6       	brne	.-70     	; 0x250 <KeyPad_getPressedKey+0x9c>
+					DIO_Write_Pin(& g_KP_Row[count]);
+			}
+			
+			
+			
+			g_KP_Col[col].port      = KP_PORT; // which port KP enable pin
+ 296:	c9 2d       	mov	r28, r9
+ 298:	d0 e0       	ldi	r29, 0x00	; 0
+ 29a:	cc 0f       	add	r28, r28
+ 29c:	dd 1f       	adc	r29, r29
+ 29e:	cc 0f       	add	r28, r28
+ 2a0:	dd 1f       	adc	r29, r29
+ 2a2:	c0 5a       	subi	r28, 0xA0	; 160
+ 2a4:	df 4f       	sbci	r29, 0xFF	; 255
+ 2a6:	a8 82       	st	Y, r10
+			g_KP_Col[col].pin_num   = 4 + col; //KP enable PIN Number
+ 2a8:	89 2d       	mov	r24, r9
+ 2aa:	8c 5f       	subi	r24, 0xFC	; 252
+ 2ac:	89 83       	std	Y+1, r24	; 0x01
+			g_KP_Col[col].direction = OUTPUT; //KP enable PIN OUTPORT
+ 2ae:	ba 82       	std	Y+2, r11	; 0x02
+			g_KP_Col[col].val     = LOGIC_LOW;
+ 2b0:	1b 82       	std	Y+3, r1	; 0x03
+			DIO_Set_Direction(& g_KP_Col[col]);
+ 2b2:	ce 01       	movw	r24, r28
+ 2b4:	0e 94 3e 00 	call	0x7c	; 0x7c <DIO_Set_Direction>
+			DIO_Write_Pin(& g_KP_Col[col]);
+ 2b8:	ce 01       	movw	r24, r28
+ 2ba:	0e 94 74 00 	call	0xe8	; 0xe8 <DIO_Write_Pin>
+ 2be:	87 01       	movw	r16, r14
+ 2c0:	d0 2e       	mov	r13, r16
+				
+				
+				
+				
+				
+				if(!(DIO_Read_Pin(& g_KP_Row[row]))) /* if the switch is press in this row */ 
+ 2c2:	e8 01       	movw	r28, r16
+ 2c4:	cc 0f       	add	r28, r28
+ 2c6:	dd 1f       	adc	r29, r29
+ 2c8:	cc 0f       	add	r28, r28
+ 2ca:	dd 1f       	adc	r29, r29
+ 2cc:	c4 59       	subi	r28, 0x94	; 148
+ 2ce:	df 4f       	sbci	r29, 0xFF	; 255
+ 2d0:	ce 01       	movw	r24, r28
+ 2d2:	0e 94 aa 00 	call	0x154	; 0x154 <DIO_Read_Pin>
+ 2d6:	81 11       	cpse	r24, r1
+ 2d8:	0e c0       	rjmp	.+28     	; 0x2f6 <KeyPad_getPressedKey+0x142>
+				{
+					while(!(DIO_Read_Pin(& g_KP_Row[row])));
+ 2da:	ce 01       	movw	r24, r28
+ 2dc:	0e 94 aa 00 	call	0x154	; 0x154 <DIO_Read_Pin>
+ 2e0:	88 23       	and	r24, r24
+ 2e2:	d9 f3       	breq	.-10     	; 0x2da <KeyPad_getPressedKey+0x126>
+					#if (N_col == 3)  
+						return KeyPad_4x3_adjustKeyNumber((row*N_col)+col+1); 
+ 2e4:	89 2d       	mov	r24, r9
+ 2e6:	8f 5f       	subi	r24, 0xFF	; 255
+ 2e8:	9d 2d       	mov	r25, r13
+ 2ea:	99 0f       	add	r25, r25
+ 2ec:	d9 0e       	add	r13, r25
+ 2ee:	8d 0d       	add	r24, r13
+ 2f0:	0e 94 cc 00 	call	0x198	; 0x198 <KeyPad_4x3_adjustKeyNumber>
+ 2f4:	0d c0       	rjmp	.+26     	; 0x310 <KeyPad_getPressedKey+0x15c>
+ 2f6:	0f 5f       	subi	r16, 0xFF	; 255
+ 2f8:	1f 4f       	sbci	r17, 0xFF	; 255
+			 * clear the output pin column in this trace and enable the internal 
+			 * pull up resistors for the rows pins
+			 */ 
+			//KEYPAD_PORT_OUT = (~(0b00010000<<col)); 
+		
+			for(row=0;row<N_row;row++) /* loop for rows */
+ 2fa:	04 30       	cpi	r16, 0x04	; 4
+ 2fc:	11 05       	cpc	r17, r1
+ 2fe:	01 f7       	brne	.-64     	; 0x2c0 <KeyPad_getPressedKey+0x10c>
+
+uint8 KeyPad_getPressedKey(void){
+	uint8 col,row,count;
+	while(1)
+	{
+		for(col=0;col<N_col;col++) /* loop for columns */
+ 300:	93 94       	inc	r9
+ 302:	82 e0       	ldi	r24, 0x02	; 2
+ 304:	89 15       	cp	r24, r9
+ 306:	08 f4       	brcc	.+2      	; 0x30a <KeyPad_getPressedKey+0x156>
+ 308:	98 2c       	mov	r9, r8
+ 30a:	e3 01       	movw	r28, r6
+* Output : void
+* Notes : #if to decide  to be 8-bit or 4-bit mode
+*******************************************************************************************************/
+
+
+uint8 KeyPad_getPressedKey(void){
+ 30c:	87 01       	movw	r16, r14
+ 30e:	79 cf       	rjmp	.-270    	; 0x202 <KeyPad_getPressedKey+0x4e>
+					#endif				
+				}
+			}
+		}
+	}	
+}
+ 310:	df 91       	pop	r29
+ 312:	cf 91       	pop	r28
+ 314:	1f 91       	pop	r17
+ 316:	0f 91       	pop	r16
+ 318:	ff 90       	pop	r15
+ 31a:	ef 90       	pop	r14
+ 31c:	df 90       	pop	r13
+ 31e:	cf 90       	pop	r12
+ 320:	bf 90       	pop	r11
+ 322:	af 90       	pop	r10
+ 324:	9f 90       	pop	r9
+ 326:	8f 90       	pop	r8
+ 328:	7f 90       	pop	r7
+ 32a:	6f 90       	pop	r6
+ 32c:	5f 90       	pop	r5
+ 32e:	4f 90       	pop	r4
+ 330:	08 95       	ret
+
+00000332 <main>:
+#include "keypad.h"
+
+int main(void)
+{
+	uint8 key=0;
+	DDRC  = 0xFF; /* 7-segment pins as output pins */
+ 332:	8f ef       	ldi	r24, 0xFF	; 255
+ 334:	84 bb       	out	0x14, r24	; 20
+	PORTC = 0; /* 7-segment displays Zero at the beginning */
+ 336:	15 ba       	out	0x15, r1	; 21
+
+	while(1)
+	{
+		key = KeyPad_getPressedKey(); /* get the pressed button from keypad */
+ 338:	0e 94 da 00 	call	0x1b4	; 0x1b4 <KeyPad_getPressedKey>
+		if((key >= 0) && (key <= 9))
+ 33c:	8a 30       	cpi	r24, 0x0A	; 10
+ 33e:	e0 f7       	brcc	.-8      	; 0x338 <main+0x6>
+		{
+			PORTC = key;
+ 340:	85 bb       	out	0x15, r24	; 21
+ 342:	fa cf       	rjmp	.-12     	; 0x338 <main+0x6>
+
+00000344 <_exit>:
+ 344:	f8 94       	cli
+
+00000346 <__stop_program>:
+ 346:	ff cf       	rjmp	.-2      	; 0x346 <__stop_program>
