@@ -1,0 +1,1 @@
+http://wormfood.net/avrbaudcalc.php?postbitrate=19200&postclock=1&u2xmode=1
