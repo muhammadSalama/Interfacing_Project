@@ -54,7 +54,7 @@ uint8 UART_Init(UART_Config *g_UART_Config)
 	  UBRR = (F_CPU/((uint32)16*g_UART_Config->Rate))-1;
 	  UBRRL=UBRR;
 	  UBRRH=(UBRR>>8);
-	  //UCSRA = (1<<U2X);
+	 
      			 
 	}
 	 else if(g_UART_Config->Speed_mode==DOUBLE_SPEED)
